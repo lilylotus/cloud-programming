@@ -16,10 +16,13 @@ import java.util.UUID;
 public class DirectController {
 
     private RabbitTemplate rabbitTemplate;
+    private RabbitTemplate rabbitTemplateJson;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public DirectController(RabbitTemplate rabbitTemplate) {
+    public DirectController(RabbitTemplate rabbitTemplate,
+                            RabbitTemplate rabbitTemplateJson) {
         this.rabbitTemplate = rabbitTemplate;
+        this.rabbitTemplateJson = rabbitTemplateJson;
     }
 
     @RequestMapping("/sender")
@@ -30,6 +33,18 @@ public class DirectController {
         dataMap.put("createTime", DATE_TIME_FORMATTER.format(LocalDateTime.now()));
 
         rabbitTemplate.convertAndSend("directExchange", "directExchangeRoutingKey", dataMap);
+
+        return dataMap;
+    }
+
+    @RequestMapping("/sender/json")
+    public Map<String, Object> directSenderJson() {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("messageId", UUID.randomUUID().toString());
+        dataMap.put("messageData", "Direct JSON Exchange Bing Queue");
+        dataMap.put("createTime", DATE_TIME_FORMATTER.format(LocalDateTime.now()));
+
+        rabbitTemplateJson.convertAndSend("normalJsonDirectExchange", "normalJsonDirectQueueRoutingKey", dataMap);
 
         return dataMap;
     }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -48,6 +49,24 @@ public class DirectReceiver {
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
         } else if (deliveryTag % 3 == 1) {
             log.error("消息消费发生异常 true，normalDirectQueue basicNack true - tag [{}]", deliveryTag);
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+        } else {
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        }
+    }
+
+    @RabbitListener(queues = {"normalJsonDirectQueue"}, containerFactory = "rabbitListenerContainerFactoryJson")
+    public void normalJsonDirectQueueReceiver(@Payload Map<String, Object> dataMap,
+                                              Message message, Channel channel) throws IOException {
+        log.info("normalJsonDirectQueue receiver [{}]", dataMap);
+        long deliveryTag = message.getMessageProperties().getDeliveryTag();
+        log.info("normalJsonDirectQueue deliveryTag [{}]", deliveryTag);
+
+        if (deliveryTag % 3 == 0) {
+            log.error("消息消费发生异常 false，normalJsonDirectQueue basicNack false - tag [{}]", deliveryTag);
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+        } else if (deliveryTag % 3 == 1) {
+            log.error("消息消费发生异常 true，normalJsonDirectQueue basicNack true - tag [{}]", deliveryTag);
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
         } else {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

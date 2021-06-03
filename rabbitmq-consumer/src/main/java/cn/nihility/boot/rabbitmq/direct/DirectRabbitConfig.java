@@ -12,6 +12,23 @@ public class DirectRabbitConfig {
 
     public static final String DEAD_LETTER_EXCHANGE = "deadLetterExchange";
 
+    // 普通队列/交换机 JSON
+    @Bean
+    public DirectExchange normalJsonDirectExchange() {
+        return new DirectExchange("normalJsonDirectExchange");
+    }
+
+    @Bean
+    public Queue normalJsonDirectQueue() {
+        return new Queue("normalJsonDirectQueue", true, false, false);
+    }
+
+    @Bean
+    public Binding normalJsonDirectExchangeBinding() {
+        return BindingBuilder.bind(normalJsonDirectQueue()).to(normalJsonDirectExchange()).with("normalJsonDirectQueueRoutingKey");
+    }
+
+    // 普通队列/交换机
     @Bean
     public DirectExchange normalDirectExchange() {
         return new DirectExchange("normalDirectExchange");
