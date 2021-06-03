@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: cloudGateway
+  cloud:
+    gateway:
+      loadbalancer:
+        use404: true
+      routes:
+        - id: eurekaClient
+          uri: lb://eurekaClient
+          predicates:
+            - Path=/eurekaClient/**
+#            - Cookie=mycookie,mycookievalue
+#            - Header=X-Request-Id, \d+
+#            - Host=**.somehost.org,**.anotherhost.org
+#            - Method=GET,POST
+#            - Path=/red/{segment},/blue/{segment}
+#            - RemoteAddr=192.168.1.1/24
+#            - Query=green
+#            - Query=green, red.
+          filters:
+            - RewritePath=/eurekaClient/(?<segment>.*),/$\{segment}
+#            - AddRequestHeader=X-Request-Header, blue
+            - AddRequestHeader=GATEWAY-ADD-HEADER, blue
+            - AddRequestParameter=gatewayAddParam, blue
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+
+server:
+  port: 30030
+
+eureka:
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+
+logging:
+  level:
+    root: info
+    cn.nihility: debug

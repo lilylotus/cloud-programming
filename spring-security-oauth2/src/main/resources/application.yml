@@ -1,0 +1,11 @@
+server:
+  port: 30050
+
+spring:
+  application:
+    name: springBootSecurityOAuth2
+
+logging:
+  level:
+    root: info
+    cn.nihility: debug

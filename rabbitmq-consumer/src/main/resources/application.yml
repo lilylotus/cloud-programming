@@ -1,0 +1,17 @@
+server:
+  port: 30090
+
+spring:
+  application:
+    name: rabbitmqConsumer
+  rabbitmq:
+    host: 10.0.41.80
+    port: 5672
+    username: rabbitmq
+    password: rabbitmq
+
+    listener:
+      type: simple
+      simple:
+        acknowledge-mode: manual
+        default-requeue-rejected: false

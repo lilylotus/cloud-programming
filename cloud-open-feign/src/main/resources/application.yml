@@ -1,0 +1,78 @@
+server:
+  port: 30020
+
+spring:
+  application:
+    name: openFeign
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+eureka:
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+
+feign:
+  httpclient:
+    enabled: true
+  hystrix:
+    enabled: true
+  okhttp:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 3000
+        loggerLevel: full
+
+
+# hystrix configuration
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+      circuitBreaker:
+        requestVolumeThreshold: 3 # 触发熔断的最小请求次数，默认 20个/10秒
+        sleepWindowInMilliseconds: 10000 # 熔断后尝试次数
+        errorThresholdPercentage: 50 # 触发熔断的失败请求百分比，默认 50%
+  dashboard:
+    proxy-stream-allow-list: "*"
+
+ribbon:
+  eager-load:
+    enabled: true
+  #说明：使用Apache HttpClient连接超时时间，单位为毫秒
+  ConnectTimeout: 3000
+  #说明：使用Apache HttpClient读取的超时时间，单位为毫秒
+  ReadTimeout: 3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # "*" 表示包含所有 ["health","info","metrics","prometheus"]
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  level:
+    root: info
+    com.netflix: debug
+    cn.nihility: debug

@@ -1,0 +1,15 @@
+server:
+  port: 30040
+
+spring:
+  application:
+    name: springBootSecurity
+#  security:
+#    user:
+#      name: admin
+#      password: admin
+
+logging:
+  level:
+    root: info
+    cn.nihility: debug

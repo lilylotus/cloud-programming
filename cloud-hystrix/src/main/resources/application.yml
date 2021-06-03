@@ -1,0 +1,59 @@
+server:
+  port: 30080
+
+spring:
+  application:
+    name: cloudHyxtrix
+
+eureka:
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+
+hystrix:
+  command:
+    # 这里的 default 代表默认的所有的 command
+    # 可以换成某一个特定的 command 的 key，默认就是方法的名字
+    default:
+      execution:
+        isolation:
+          #strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 2000
+            coreSize: 20
+      metrics:
+        rollingStats:
+          timeInMilliseconds: 5000
+      circuitBreaker:
+        requestVolumeThreshold: 6
+        errorThresholdPercentage: 50
+        sleepWindowInMilliseconds: 3000
+  threadpool:
+    default:
+      allowMaximumSizeToDivergeFromCoreSize: true
+      coreSize: 20
+      maximumSize: 1000
+      maxQueueSize: -1
+      keepAliveTimeMinutes: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # "*" 表示包含所有 ["health","info","metrics","prometheus"]
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  level:
+    root: info
+    cn.nihility: debug
