@@ -22,4 +22,15 @@ public class RabbitReceiverConfiguration {
         return factory;
     }
 
+    /**
+     * 设置预取数量
+     */
+    //@Bean
+    public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setPrefetchCount(20);
+        return factory;
+    }
+
 }

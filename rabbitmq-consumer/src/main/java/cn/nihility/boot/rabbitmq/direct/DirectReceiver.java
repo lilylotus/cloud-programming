@@ -38,6 +38,7 @@ public class DirectReceiver {
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
 
+    //@RabbitListener(queues = {"normalDirectQueue"}, concurrency = "5-10", containerFactory = "simpleRabbitListenerContainerFactory")
     @RabbitListener(queues = {"normalDirectQueue"})
     public void normalDirectQueueReceiver(Map<String, Object> dataMap, Message message, Channel channel) throws IOException {
         log.info("normalDirectQueue receiver [{}]", dataMap);
