@@ -12,4 +12,5 @@ include 'spring-security-oauth2-sso'
 include 'cloud-hystrix'
 include 'rabbitmq-producer'
 include 'rabbitmq-consumer'
+include 'diversity-practice'
 
