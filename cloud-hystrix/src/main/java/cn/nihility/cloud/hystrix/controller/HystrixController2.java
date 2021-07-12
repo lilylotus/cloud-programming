@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @RestController
 public class HystrixController2 {
 
     private RestTemplate restTemplate;
+    private static final Map<String, HystrixCommandService> HYSTRIX_MAP = new ConcurrentHashMap<>(8);
 
     public HystrixController2(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -18,7 +22,13 @@ public class HystrixController2 {
 
     @RequestMapping("/hystrix2/command/{command}")
     public String commandService(@PathVariable("command") String command) {
-        HystrixCommandService service = new HystrixCommandService(command);
+        HystrixCommandService service;
+        if (HYSTRIX_MAP.get(command) == null) {
+            service = new HystrixCommandService(command);
+            HYSTRIX_MAP.put(command, service);
+        } else {
+            service = HYSTRIX_MAP.get(command);
+        }
         return service.execute();
     }
 

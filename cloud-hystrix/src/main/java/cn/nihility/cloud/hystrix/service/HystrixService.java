@@ -3,12 +3,15 @@ package cn.nihility.cloud.hystrix.service;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class HystrixService {
 
+    private static final Logger log = LoggerFactory.getLogger(HystrixService.class);
     private RestTemplate restTemplate;
 
     public HystrixService(RestTemplate restTemplate) {
@@ -37,7 +40,9 @@ public class HystrixService {
         return restTemplate.getForObject("http://eurekaClient/hystrix/requestCircuitBreaker/{random}", String.class, random);
     }
 
-    @HystrixCommand(threadPoolKey = "requestTimeOut",
+    @HystrixCommand(
+        // 设置一个隔离的线程池
+        threadPoolKey = "requestTimeOut",
         threadPoolProperties = {
             @HystrixProperty(name = "coreSize", value = "2"),
             @HystrixProperty(name = "maxQueueSize", value = "10"),
@@ -61,6 +66,20 @@ public class HystrixService {
         return restTemplate.getForObject("http://eurekaClient/hystrix/requestError", String.class);
     }
 
+    /**
+     * 信号量隔离，配置当并发高的时候服务降级，并返回拖底数据，防止服务雪崩
+     */
+    @HystrixCommand(fallbackMethod = "requestNormalSemaphoreFallbackMethod",
+        commandProperties = {
+            // 信号量隔离，默认线程 THREAD
+            @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_STRATEGY, value = "SEMAPHORE"),
+            // 信号量最大并发度
+            @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_SEMAPHORE_MAX_CONCURRENT_REQUESTS, value = "30")
+        })
+    public String requestNormalSemaphore() {
+        return restTemplate.getForObject("http://eurekaClient/hystrix/requestNormal", String.class);
+    }
+
     public String requestTimeOutFallbackMethod() {
         return "requestTimeOutFallbackMethod";
     }
@@ -71,6 +90,11 @@ public class HystrixService {
 
     public String requestNormalFallbackMethod() {
         return "requestNormalFallbackMethod";
+    }
+
+    public String requestNormalSemaphoreFallbackMethod() {
+        log.error("requestNormalSemaphoreFallbackMethod");
+        return "requestNormalSemaphoreFallbackMethod";
     }
 
     public String requestCircuitBreakerFallbackMethod(Integer random) {

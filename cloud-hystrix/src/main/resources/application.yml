@@ -42,6 +42,8 @@ hystrix:
       maximumSize: 1000
       maxQueueSize: -1
       keepAliveTimeMinutes: 1
+  dashboard:
+    proxyStreamAllowList: ["localhost"]
 
 management:
   endpoints:
