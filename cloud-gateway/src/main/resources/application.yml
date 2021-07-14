@@ -3,6 +3,11 @@ spring:
     name: cloudGateway
   cloud:
     gateway:
+      httpclient:
+        pool:
+          # null 连接不会关闭
+          max-idle-time: 10000
+          max-connections: 30
       loadbalancer:
         use404: true
       routes:
@@ -33,6 +38,10 @@ spring:
 
 server:
   port: 30030
+  tomcat:
+    # 防止出现 Connection prematurely closed
+    # 要适当大于 spring.cloud.gateway.httpclient.pool.max-idle-time
+    connection-timeout: 20000
 
 eureka:
   instance:
