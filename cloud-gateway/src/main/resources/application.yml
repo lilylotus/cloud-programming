@@ -1,6 +1,11 @@
 spring:
   application:
     name: cloudGateway
+  zipkin:
+    baseUrl: http://127.0.0.1:9411/
+    sleuth:
+      sampler:
+        probability: 1
   cloud:
     gateway:
       httpclient:

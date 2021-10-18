@@ -13,4 +13,5 @@ include 'cloud-hystrix'
 include 'rabbitmq-producer'
 include 'rabbitmq-consumer'
 include 'diversity-practice'
+include 'nacos-client'
 

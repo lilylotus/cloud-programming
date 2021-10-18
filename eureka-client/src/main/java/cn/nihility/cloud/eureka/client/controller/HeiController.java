@@ -32,6 +32,13 @@ public class HeiController {
         return CommonResult.success(msg, "success");
     }
 
+    @GetMapping("/echo2/{msg}")
+    public CommonResult echo(@PathVariable("msg") String msg, HttpServletRequest request) {
+        log.info("receive echo2 msg [{}]", msg);
+        parseRequest(request);
+        return CommonResult.success(msg, "success");
+    }
+
     private void parseRequest(HttpServletRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {

@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: eurekaClient
+  zipkin:
+    baseUrl: http://127.0.0.1:9411/
+    sleuth:
+      sampler:
+        probability: 1
 
 eureka:
   instance:

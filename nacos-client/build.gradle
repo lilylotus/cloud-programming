@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+ext {
+    set ("nacosCloudVersion", "2.2.6.RELEASE")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // spring cloud nacos discovery
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:${nacosCloudVersion}"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:${nacosCloudVersion}"
+    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel:${nacosCloudVersion}"
+}

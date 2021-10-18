@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: nacosCloudClient
+  cloud:
+    inetutils:
+      preferred-networks: 10.0.41
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        enabled: true
+      config:
+        # 加载优先级 config > extension > shared
+        # 拓展配置集数组，对应 Config 数组
+        #        extension-configs:
+        #          - data-id: db-share.yml
+        #            group: DEFAULT_GROUP
+        # 是否自动刷新配置，默认为 false
+        #            refresh: true
+        # 共享配置集数组，对应 Config 数组
+        #        shared-configs:
+        #          - data-id: shared.yml
+        #            group: DEFAULT_GROUP
+        # 是否自动刷新配置，默认为 false
+        #            refresh: true
+        # nacos 中配置格式 ${prefix}-${spring.profiles.active}.${file-extension} : umc-biz.yml/umc.yml
+        # prefix -> spring.application.name
+        # file-extension -> properties|yml 两种类型 : spring.cloud.nacos.config.file-extension
+        # file-extension 不填默认为 properties
+        enabled: true
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+    sentinel:
+      enabled: true
+      transport:
+        # sentinel 控制台的请求地址
+        dashboard: 127.0.0.1:8080
